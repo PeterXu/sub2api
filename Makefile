@@ -8,6 +8,14 @@ FRONTEND_CRITICAL_VITEST := \
 	src/components/user/profile/__tests__/ProfileInfoCard.spec.ts \
 	src/views/admin/__tests__/SettingsView.spec.ts
 
+DATE_PREFIX := $(shell date +%y%m%d)
+GIT_VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo 'dev')
+VERSION ?= $(DATE_PREFIX).$(GIT_VERSION)
+
+
+docker:
+	docker compose build --build-arg VERSION=$(VERSION)
+
 # 一键编译前后端
 build: build-backend build-frontend
 

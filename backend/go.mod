@@ -1,6 +1,6 @@
 module github.com/Wei-Shaw/sub2api
 
-go 1.26.4
+go 1.26.1
 
 require (
 	entgo.io/ent v0.14.5
@@ -185,3 +185,5 @@ require (
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 )
+
+replace github.com/Wei-Shaw/sub2api => ./
