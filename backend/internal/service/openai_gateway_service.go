@@ -2976,7 +2976,7 @@ func (s *OpenAIGatewayService) Forward(ctx context.Context, c *gin.Context, acco
 		// Get proxy URL
 		proxyURL := ""
 		if account.ProxyID != nil && account.Proxy != nil {
-			proxyURL = account.Proxy.URL()
+			proxyURL = account.Proxy.NewURL(c, account)
 		}
 
 		// Send request
@@ -3260,7 +3260,7 @@ func (s *OpenAIGatewayService) forwardOpenAIPassthrough(
 
 	proxyURL := ""
 	if account.ProxyID != nil && account.Proxy != nil {
-		proxyURL = account.Proxy.URL()
+		proxyURL = account.Proxy.NewURL(c, account)
 	}
 
 	if c != nil {

@@ -1409,7 +1409,7 @@ func (s *AntigravityGatewayService) Forward(ctx context.Context, c *gin.Context,
 	// 代理 URL
 	proxyURL := ""
 	if account.ProxyID != nil && account.Proxy != nil {
-		proxyURL = account.Proxy.URL()
+		proxyURL = account.Proxy.NewURL(c, account)
 	}
 
 	// 获取转换选项
@@ -2177,7 +2177,7 @@ func (s *AntigravityGatewayService) ForwardGemini(ctx context.Context, c *gin.Co
 	// 代理 URL
 	proxyURL := ""
 	if account.ProxyID != nil && account.Proxy != nil {
-		proxyURL = account.Proxy.URL()
+		proxyURL = account.Proxy.NewURL(c, account)
 	}
 
 	// Antigravity 上游要求必须包含身份提示词，注入到请求中
@@ -4317,7 +4317,7 @@ func (s *AntigravityGatewayService) ForwardUpstream(ctx context.Context, c *gin.
 	// 代理 URL
 	proxyURL := ""
 	if account.ProxyID != nil && account.Proxy != nil {
-		proxyURL = account.Proxy.URL()
+		proxyURL = account.Proxy.NewURL(c, account)
 	}
 
 	// 发送请求

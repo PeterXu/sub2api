@@ -182,7 +182,7 @@ func (s *OpenAIGatewayService) proxyOpenAIWSHTTPBridgeTurn(
 
 	proxyURL := ""
 	if account.ProxyID != nil && account.Proxy != nil {
-		proxyURL = account.Proxy.URL()
+		proxyURL = account.Proxy.NewURL(c, account)
 	}
 	if c != nil {
 		c.Set("openai_passthrough", true)

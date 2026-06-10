@@ -1287,6 +1287,19 @@
           <ProxyAdBanner />
         </div>
         <ProxySelector v-model="form.proxy_id" :proxies="proxies" />
+        <div class="mt-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input
+              v-model="injectUserIdInProxy"
+              type="checkbox"
+              class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+            />
+            <span class="text-sm text-gray-600 dark:text-gray-400">
+              {{ t('admin.accounts.injectUserIdInProxy') }}
+            </span>
+          </label>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('admin.accounts.injectUserIdInProxyHint') }}</p>
+        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -2531,6 +2544,7 @@ const autoPause5hDisabled = ref(false)
 const autoPause7dDisabled = ref(false)
 const mixedScheduling = ref(false) // For antigravity accounts: enable mixed scheduling
 const allowOverages = ref(false) // For antigravity accounts: enable AI Credits overages
+const injectUserIdInProxy = ref(false) // Inject X-Proxy-User-Id header into proxy URL username
 const antigravityModelRestrictionMode = ref<'whitelist' | 'mapping'>('whitelist')
 const antigravityWhitelistModels = ref<string[]>([])
 const antigravityModelMappings = ref<ModelMapping[]>([])
@@ -2944,9 +2958,11 @@ const syncFormFromAccount = (newAccount: Account | null) => {
   // Load mixed scheduling setting (only for antigravity accounts)
   mixedScheduling.value = false
   allowOverages.value = false
+  injectUserIdInProxy.value = false
 	const extra = newAccount.extra as Record<string, unknown> | undefined
 	mixedScheduling.value = extra?.mixed_scheduling === true
 	allowOverages.value = extra?.allow_overages === true
+	injectUserIdInProxy.value = extra?.inject_userid_in_proxy === true
 	autoPause5hThreshold.value = typeof extra?.auto_pause_5h_threshold === 'number' ? extra.auto_pause_5h_threshold * 100 : null
 	autoPause7dThreshold.value = typeof extra?.auto_pause_7d_threshold === 'number' ? extra.auto_pause_7d_threshold * 100 : null
 	autoPause5hDisabled.value = extra?.auto_pause_5h_disabled === true
@@ -3948,10 +3964,18 @@ const handleSubmit = async () => {
       updatePayload.credentials = newCredentials
     }
 
+    // Handle inject_userid_in_proxy setting (applies to all accounts with proxy)
+    const currentExtra = (updatePayload.extra as Record<string, unknown>) || (props.account.extra as Record<string, unknown>) || {}
+    const newExtra: Record<string, unknown> = { ...currentExtra }
+    if (injectUserIdInProxy.value) {
+      newExtra.inject_userid_in_proxy = true
+    } else {
+      delete newExtra.inject_userid_in_proxy
+    }
+    updatePayload.extra = newExtra
+
     // For antigravity accounts, handle mixed_scheduling and allow_overages in extra
     if (props.account.platform === 'antigravity') {
-      const currentExtra = (props.account.extra as Record<string, unknown>) || {}
-      const newExtra: Record<string, unknown> = { ...currentExtra }
       if (mixedScheduling.value) {
         newExtra.mixed_scheduling = true
       } else {

@@ -1913,7 +1913,7 @@ func (s *OpenAIGatewayService) forwardOpenAIWSV2(
 		ForceNewConn:    forceNewConn,
 		ProxyURL: func() string {
 			if account.ProxyID != nil && account.Proxy != nil {
-				return account.Proxy.URL()
+				return account.Proxy.NewURL(c, account)
 			}
 			return ""
 		}(),
@@ -2910,7 +2910,7 @@ func (s *OpenAIGatewayService) ProxyResponsesWebSocketFromClient(
 		Headers: wsHeaders,
 		ProxyURL: func() string {
 			if account.ProxyID != nil && account.Proxy != nil {
-				return account.Proxy.URL()
+				return account.Proxy.NewURL(c, account)
 			}
 			return ""
 		}(),

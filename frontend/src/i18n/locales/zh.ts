@@ -3758,6 +3758,8 @@ export default {
       allowOverages: '允许超量请求 (AI Credits)',
       allowOveragesTooltip:
         '仅在免费配额被明确判定为耗尽后才会使用 AI Credits。普通并发 429 限流不会切换到超量请求。',
+      injectUserIdInProxy: '注入 X-Proxy-User-Id 到代理',
+      injectUserIdInProxyHint: '从请求头读取 X-Proxy-User-Id 并注入到代理 URL 用户名中，用于标识调用方',
       creating: '创建中...',
       updating: '更新中...',
       accountCreated: '账号创建成功',
