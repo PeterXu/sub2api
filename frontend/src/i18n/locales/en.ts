@@ -3680,6 +3680,8 @@ export default {
       allowOverages: 'Allow Overages (AI Credits)',
       allowOveragesTooltip:
         'Only use AI Credits after free quota is explicitly exhausted. Ordinary concurrent 429 rate limits will not switch to overages.',
+      injectUserIdInProxy: 'Inject X-Proxy-User-Id into Proxy',
+      injectUserIdInProxyHint: 'Read X-Proxy-User-Id header from requests and inject into proxy URL username for caller identification',
       creating: 'Creating...',
       updating: 'Updating...',
       accountCreated: 'Account created successfully',

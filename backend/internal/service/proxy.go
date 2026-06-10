@@ -5,6 +5,8 @@ import (
 	"net/url"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -48,6 +50,32 @@ func (p *Proxy) URL() string {
 		u.User = url.UserPassword(p.Username, p.Password)
 	}
 	return u.String()
+}
+
+// InjectFromIdURL returns the proxy URL with fromId injected into the username field.
+// If injectEnabled is false, fromId is empty, or the proxy has no username, it falls
+// back to the standard URL().
+func (p *Proxy) InjectFromIdURL(injectEnabled bool, fromId string) string {
+	if !injectEnabled || fromId == "" || p.Username == "" {
+		return p.URL()
+	}
+	u := &url.URL{
+		Scheme: p.Protocol,
+		Host:   net.JoinHostPort(p.Host, strconv.Itoa(p.Port)),
+	}
+	injectedUser := p.Username + "@" + fromId
+	if p.Password != "" {
+		u.User = url.UserPassword(injectedUser, p.Password)
+	} else {
+		u.User = url.User(injectedUser)
+	}
+	return u.String()
+}
+
+func (p *Proxy) NewURL(c *gin.Context, account *Account) string {
+	injectEnabled := account.IsInjectUserIdInProxyEnabled()
+	fromId := c.GetHeader("X-Proxy-User-Id")
+	return p.InjectFromIdURL(injectEnabled, fromId)
 }
 
 type ProxyWithAccountCount struct {

@@ -1783,6 +1783,18 @@ func (a *Account) IsCacheTTLOverrideEnabled() bool {
 	return false
 }
 
+// IsInjectUserIdInProxyEnabled checks if the account should inject userid
+// header value into the proxy URL username.
+func (a *Account) IsInjectUserIdInProxyEnabled() bool {
+	if a == nil || a.Extra == nil {
+		return false
+	}
+	if v, ok := a.Extra["inject_userid_in_proxy"].(bool); ok {
+		return v
+	}
+	return false
+}
+
 // GetCacheTTLOverrideTarget 获取缓存 TTL 强制替换的目标类型
 // 返回 "5m" 或 "1h"，默认 "5m"
 func (a *Account) GetCacheTTLOverrideTarget() string {
