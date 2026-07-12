@@ -1,3 +1,7 @@
+VER_PREFIX := $(shell git rev-parse --abbrev-ref HEAD)
+GIT_VERSION := $(shell git rev-parse --short HEAD)
+VERSION ?= $(VER_PREFIX).g$(GIT_VERSION)
+
 .PHONY: build build-backend build-frontend test test-backend test-frontend test-frontend-critical
 
 FRONTEND_CRITICAL_VITEST := \
@@ -7,6 +11,12 @@ FRONTEND_CRITICAL_VITEST := \
 	src/views/user/__tests__/PaymentResultView.spec.ts \
 	src/components/user/profile/__tests__/ProfileInfoCard.spec.ts \
 	src/views/admin/__tests__/SettingsView.spec.ts
+
+
+all: build
+
+docker:
+	docker compose build --build-arg VERSION=$(VERSION)
 
 # 一键编译前后端
 build: build-backend build-frontend
