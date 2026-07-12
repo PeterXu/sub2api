@@ -1,6 +1,7 @@
-VER_PREFIX := $(shell git rev-parse --abbrev-ref HEAD)
+VER_PREFIX := $(shell git rev-parse --abbrev-ref HEAD | sed 's/^devp\.//')
 GIT_VERSION := $(shell git rev-parse --short HEAD)
 VERSION ?= $(VER_PREFIX).g$(GIT_VERSION)
+
 
 .PHONY: build build-backend build-frontend test test-backend test-frontend test-frontend-critical
 
